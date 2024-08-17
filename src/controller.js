@@ -26,6 +26,29 @@ class libroController{
     }
     
 
+        async add(req, res){
+            try{
+                const libro = req.body;
+                const [result] = await pool.query(`INSERT INTO libros(nombre, autor, categoria, año_publicacion, ISBN) VALUES (?, ?, ?, ?, ?)`, [libro.nombre, libro.autor, libro.categoria, libro.año_publicacion, libro.ISBN]);
+                res.json({"Id insertado": result.insertId});
+            } catch (error){
+                res.status(500).json({message: "Error al agregar el libro", error});
+            }
+    }
+
+    async delete(req, res){
+        try{
+        const libro = req.body;
+        const [result] = await pool.query(`DELETE FROM libros WHERE ISBN=(?)`, [libro.ISBN]);
+        res.json({"Registros eliminados": result.affectedRows});
+        } 
+        catch (error){
+            console.error('Error al eliminar el libro:', error);
+            res.status(500).json({message: 'Ocurrió un error al intentar eliminar un libro.'});
+        }
+    }
+
+   
 
 }
 
